@@ -81,7 +81,7 @@ final class DifferentialManiphestTasksFieldSpecification
   }
 
   public function shouldAppearOnCommitMessageTemplate() {
-    return false;
+    return $this->shouldAppearOnRevisionView();
   }
 
   public function shouldAppearOnCommitMessage() {
