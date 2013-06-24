@@ -152,7 +152,7 @@ final class ManiphestTaskDetailController extends ManiphestController {
     $transaction_types = ManiphestTransactionType::getTransactionTypeMap();
     $resolution_types = ManiphestTaskStatus::getTaskStatusMap();
 
-    if ($task->getStatus() == ManiphestTaskStatus::STATUS_OPEN) {
+    if (ManiphestTaskStatus::isStatusOpen($task->getStatus())) {
       $resolution_types = array_select_keys(
         $resolution_types,
         array(
@@ -164,6 +164,8 @@ final class ManiphestTaskDetailController extends ManiphestController {
     } else {
       $resolution_types = array(
         ManiphestTaskStatus::STATUS_OPEN => 'Reopened',
+        ManiphestTaskStatus::STATUS_BUILD => 'Build',
+        ManiphestTaskStatus::STATUS_VERIFY => 'Verify',
       );
       $transaction_types[ManiphestTransactionType::TYPE_STATUS] =
         'Reopen Task';

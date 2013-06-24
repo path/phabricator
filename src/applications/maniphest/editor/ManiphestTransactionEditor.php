@@ -310,7 +310,7 @@ final class ManiphestTransactionEditor extends PhabricatorEditor {
           $actions[] = ManiphestAction::ACTION_ASSIGN;
           break;
         case ManiphestTransactionType::TYPE_STATUS:
-          if ($task->getStatus() != ManiphestTaskStatus::STATUS_OPEN) {
+          if (ManiphestTaskStatus::isStatusOpen($task->getStatus())) {
             $actions[] = ManiphestAction::ACTION_CLOSE;
           } else if ($this->isCreate($transactions)) {
             $actions[] = ManiphestAction::ACTION_CREATE;
@@ -371,7 +371,7 @@ final class ManiphestTransactionEditor extends PhabricatorEditor {
       $type = $transaction->getTransactionType();
       if (($type == ManiphestTransactionType::TYPE_STATUS) &&
           ($transaction->getOldValue() === null) &&
-          ($transaction->getNewValue() == ManiphestTaskStatus::STATUS_OPEN)) {
+          (ManiphestTaskStatus::isStatusOpen($transaction->getNewValue()))) {
         $is_create = true;
       }
     }

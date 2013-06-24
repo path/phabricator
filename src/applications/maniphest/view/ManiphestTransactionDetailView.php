@@ -426,7 +426,7 @@ final class ManiphestTransactionDetailView extends ManiphestView {
         }
         break;
       case ManiphestTransactionType::TYPE_STATUS:
-        if ($new == ManiphestTaskStatus::STATUS_OPEN) {
+        if ($new === ManiphestTaskStatus::STATUS_OPEN) {
           if ($old) {
             $verb = 'Reopened';
             $desc = 'reopened this task';
@@ -436,6 +436,15 @@ final class ManiphestTransactionDetailView extends ManiphestView {
             $desc = 'created this task';
             $classes[] = 'created';
           }
+        } else if (in_array($new, array(
+            ManiphestTaskStatus::STATUS_BUILD,
+            ManiphestTaskStatus::STATUS_VERIFY,
+            ManiphestTaskStatus::STATUS_ANALYZE
+        ))) {
+          $verb = 'Updated';
+          $full = idx(ManiphestTaskStatus::getTaskStatusMap(), $new, '???');
+          $desc = 'updated this task to "'.$full.'"';
+          $classes[] = 'updated';
         } else if ($new == ManiphestTaskStatus::STATUS_CLOSED_SPITE) {
           $verb = 'Spited';
           $desc = 'closed this task out of spite';

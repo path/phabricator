@@ -26,6 +26,9 @@ final class ManiphestTaskQuery extends PhabricatorQuery {
   private $status           = 'status-any';
   const STATUS_ANY          = 'status-any';
   const STATUS_OPEN         = 'status-open';
+  const STATUS_BUILD        = 'status-build';
+  const STATUS_VERIFY       = 'status-verify';
+  const STATUS_ANALYZE      = 'status-analyze';
   const STATUS_CLOSED       = 'status-closed';
   const STATUS_RESOLVED     = 'status-resolved';
   const STATUS_WONTFIX      = 'status-wontfix';
@@ -339,6 +342,12 @@ final class ManiphestTaskQuery extends PhabricatorQuery {
         return null;
       case self::STATUS_OPEN:
         return 'status = 0';
+      case self::STATUS_BUILD:
+        return 'status = 50';
+      case self::STATUS_VERIFY:
+        return 'status = 51';
+      case self::STATUS_ANALYZE:
+        return 'status = 52';
       case self::STATUS_CLOSED:
         return 'status > 0';
       default:

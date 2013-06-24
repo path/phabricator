@@ -511,8 +511,20 @@ final class ManiphestTaskListController extends ManiphestController {
     }
 
     $status = $search_query->getParameter('status', 'all');
-    if (!empty($status['open']) && !empty($status['closed'])) {
+    if (
+        !empty($status['open']) &&
+        !empty($status['closed']) &&
+        !empty($status['build']) &&
+        !empty($status['verify']) &&
+        !empty($status['analyze'])
+    ) {
       $query->withStatus(ManiphestTaskQuery::STATUS_ANY);
+    } else if (!empty($status['build'])) {
+      $query->withStatus(ManiphestTaskQuery::STATUS_BUILD);
+    } else if (!empty($status['verify'])) {
+      $query->withStatus(ManiphestTaskQuery::STATUS_VERIFY);
+    } else if (!empty($status['analyze'])) {
+      $query->withStatus(ManiphestTaskQuery::STATUS_ANALYZE);
     } else if (!empty($status['open'])) {
       $query->withStatus(ManiphestTaskQuery::STATUS_OPEN);
     } else {
@@ -913,16 +925,12 @@ final class ManiphestTaskListController extends ManiphestController {
 
   private function getStatusMap() {
     return array(
-      'o'   => array(
-        'open' => true,
-      ),
-      'c'   => array(
-        'closed' => true,
-      ),
-      'oc'  => array(
-        'open' => true,
-        'closed' => true,
-      ),
+      'o'  => array('open' => true,),
+      'c'  => array('closed' => true),
+      'b'  => array('open' => true, 'build'   => true),
+      'v'  => array('open' => true, 'verify'  => true),
+      'a'  => array('open' => true, 'analyze' => true),
+      'oc' => array('open' => true, 'closed'  => true),
     );
   }
 
@@ -948,6 +956,9 @@ final class ManiphestTaskListController extends ManiphestController {
   private function getStatusButtonMap() {
     return array(
       'o'   => pht('Open'),
+      'b'   => pht('Build'),
+      'v'   => pht('Verify'),
+      'a'   => pht('Analyze'),
       'c'   => pht('Closed'),
       'oc'  => pht('All'),
     );
