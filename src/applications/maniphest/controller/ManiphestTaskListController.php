@@ -42,6 +42,7 @@ final class ManiphestTaskListController extends ManiphestController {
         ->alter('aprojects',     $this->getArrToStrList('set_aprojects'))
         ->alter('useraprojects', $this->getArrToStrList('set_useraprojects'))
         ->alter('xprojects',     $this->getArrToStrList('set_xprojects'))
+        ->alter('xowner',       $this->getArrToStrList('set_xowner'))
         ->alter('owners',        $this->getArrToStrList('set_owners'))
         ->alter('authors',       $this->getArrToStrList('set_authors'))
         ->alter('lpriority',     $min_priority)
@@ -111,6 +112,9 @@ final class ManiphestTaskListController extends ManiphestController {
       array());
     $exclude_project_phids = $query->getParameter(
       'excludeProjectPHIDs',
+      array());
+    $exclude_owner_phids = $query->getParameter(
+      'excludeOwnerPHIDs',
       array());
     $low_priority   = $query->getParameter('lowPriority');
     $high_priority  = $query->getParameter('highPriority');
@@ -231,6 +235,18 @@ final class ManiphestTaskListController extends ManiphestController {
         ->setCaption(
           pht('Find tasks in ANY of these users\' projects ("OR" query).'))
         ->setValue($tokens));
+
+      $tokens = array();
+      foreach ($exclude_owner_phids as $phid) {
+        $tokens[$phid] = $handles[$phid]->getFullName();
+      }
+      $form->appendChild(
+        id(new AphrontFormTokenizerControl())
+          ->setDatasource('/typeahead/common/users/')
+          ->setName('set_xowner')
+          ->setLabel(pht('Exclude Owners'))
+          ->setCaption(pht('Find tasks NOT in owned by any of these people.'))
+          ->setValue($tokens));
 
       $tokens = array();
       foreach ($exclude_project_phids as $phid) {
@@ -450,6 +466,9 @@ final class ManiphestTaskListController extends ManiphestController {
     $xproject_phids = $search_query->getParameter(
       'excludeProjectPHIDs',
       array());
+    $xowner_phids = $search_query->getParameter(
+      'excludeOwnerPHIDs',
+      array());
     $owner_phids = $search_query->getParameter('ownerPHIDs', array());
     $author_phids = $search_query->getParameter('authorPHIDs', array());
 
@@ -469,6 +488,9 @@ final class ManiphestTaskListController extends ManiphestController {
 
     if ($xproject_phids) {
       $query->withoutProjects($xproject_phids);
+    }
+    if ($xowner_phids) {
+      $query->withoutOwners($xowner_phids);
     }
 
     if ($any_project_phids) {
@@ -572,6 +594,7 @@ final class ManiphestTaskListController extends ManiphestController {
       $handle_phids,
       $project_phids,
       $user_phids,
+      $xowner_phids,
       $xproject_phids,
       $owner_phids,
       $author_phids,
@@ -773,6 +796,7 @@ final class ManiphestTaskListController extends ManiphestController {
 
     $project_phids = $request->getStrList('projects');
     $exclude_project_phids = $request->getStrList('xprojects');
+    $exclude_owner_phids = $request->getStrList('xowner');
     $task_ids = $request->getStrList('tasks');
 
     if ($task_ids) {
@@ -816,6 +840,7 @@ final class ManiphestTaskListController extends ManiphestController {
         'anyProjectPHIDs'     => $any_project_phids,
         'anyUserProjectPHIDs' => $any_user_project_phids,
         'excludeProjectPHIDs' => $exclude_project_phids,
+        'excludeOwnerPHIDs'   => $exclude_owner_phids,
         'ownerPHIDs'          => $owner_phids,
         'authorPHIDs'         => $author_phids,
         'taskIDs'             => $task_ids,

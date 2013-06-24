@@ -15,6 +15,7 @@ final class ManiphestTaskQuery extends PhabricatorQuery {
   private $includeUnowned      = null;
   private $projectPHIDs        = array();
   private $xprojectPHIDs       = array();
+  private $xownerPHIDs         = array();
   private $subscriberPHIDs     = array();
   private $anyProjectPHIDs     = array();
   private $anyUserProjectPHIDs = array();
@@ -115,6 +116,11 @@ final class ManiphestTaskQuery extends PhabricatorQuery {
     return $this;
   }
 
+  public function withoutOwners(array $owners) {
+    $this->xownerPHIDs = $owners;
+    return $this;
+  }
+
   public function withStatus($status) {
     $this->status = $status;
     return $this;
@@ -212,6 +218,7 @@ final class ManiphestTaskQuery extends PhabricatorQuery {
     $where[] = $this->buildAnyProjectWhereClause($conn);
     $where[] = $this->buildAnyUserProjectWhereClause($conn);
     $where[] = $this->buildXProjectWhereClause($conn);
+    $where[] = $this->buildXOwnerWhereClause($conn);
     $where[] = $this->buildFullTextWhereClause($conn);
 
     $where = $this->formatWhereClause($where);
@@ -534,6 +541,17 @@ final class ManiphestTaskQuery extends PhabricatorQuery {
         AND xproject.projectPHID IN (%Ls)',
       $project_dao->getTableName(),
       $this->xprojectPHIDs);
+  }
+
+  private function buildXOwnerWhereClause(AphrontDatabaseConnection $conn) {
+    if (!$this->xownerPHIDs) {
+      return null;
+    }
+
+    return qsprintf(
+      $conn,
+      'ownerPHID NOT IN (%Ls)',
+      $this->xownerPHIDs);
   }
 
   private function buildSubscriberJoinClause(AphrontDatabaseConnection $conn) {
