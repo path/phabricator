@@ -341,6 +341,7 @@ final class ManiphestTaskQuery extends PhabricatorQuery {
       case self::STATUS_ANY:
         return null;
       case self::STATUS_OPEN:
+        return 'status IN (0, 52)';
         return 'status = 0';
       case self::STATUS_BUILD:
         return 'status = 50';
