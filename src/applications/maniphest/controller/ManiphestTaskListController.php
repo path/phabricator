@@ -930,7 +930,13 @@ final class ManiphestTaskListController extends ManiphestController {
       'b'  => array('open' => true, 'build'   => true),
       'v'  => array('open' => true, 'verify'  => true),
       'a'  => array('open' => true, 'analyze' => true),
-      'oc' => array('open' => true, 'closed'  => true),
+      'oc' => array(
+          'open' => true,
+          'closed'  => true,
+          'build' => true,
+          'analyze' => true,
+          'verify' => true
+      ),
     );
   }
 
