@@ -171,6 +171,9 @@ final class ManiphestTaskDetailController extends ManiphestController {
         'Reopen Task';
       unset($transaction_types[ManiphestTransactionType::TYPE_PRIORITY]);
       unset($transaction_types[ManiphestTransactionType::TYPE_OWNER]);
+      unset($transaction_types[ManiphestTransactionType::TYPE_BUILD]);
+      unset($transaction_types[ManiphestTransactionType::TYPE_VERIFY]);
+      unset($transaction_types[ManiphestTransactionType::TYPE_ANALYZE]);
     }
 
     $default_claim = array(

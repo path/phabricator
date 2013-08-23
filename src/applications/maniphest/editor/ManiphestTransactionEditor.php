@@ -43,6 +43,15 @@ final class ManiphestTransactionEditor extends PhabricatorEditor {
         case ManiphestTransactionType::TYPE_STATUS:
           $old = $task->getStatus();
           break;
+        case ManiphestTransactionType::TYPE_BUILD:
+          $old = $task->getStatus();
+          break;
+        case ManiphestTransactionType::TYPE_VERIFY:
+          $old = $task->getStatus();
+          break;
+        case ManiphestTransactionType::TYPE_ANALYZE:
+          $old = $task->getStatus();
+          break;
         case ManiphestTransactionType::TYPE_OWNER:
           $old = $task->getOwnerPHID();
           break;
@@ -126,6 +135,15 @@ final class ManiphestTransactionEditor extends PhabricatorEditor {
             break;
           case ManiphestTransactionType::TYPE_STATUS:
             $task->setStatus($new);
+            break;
+          case ManiphestTransactionType::TYPE_BUILD:
+            $task->setStatus(ManiphestTaskStatus::STATUS_BUILD);
+            break;
+          case ManiphestTransactionType::TYPE_VERIFY:
+            $task->setStatus(ManiphestTaskStatus::STATUS_VERIFY);
+            break;
+          case ManiphestTransactionType::TYPE_ANALYZE:
+            $task->setStatus(ManiphestTaskStatus::STATUS_ANALYZE);
             break;
           case ManiphestTransactionType::TYPE_OWNER:
             if ($new) {

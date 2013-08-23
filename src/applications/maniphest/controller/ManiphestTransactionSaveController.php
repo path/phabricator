@@ -106,6 +106,15 @@ final class ManiphestTransactionSaveController extends ManiphestController {
         $projects = array_unique($projects);
         $transaction->setNewValue($projects);
         break;
+      case ManiphestTransactionType::TYPE_BUILD:
+        $transaction->setNewValue(ManiphestTaskStatus::STATUS_BUILD);
+        break;
+      case ManiphestTransactionType::TYPE_VERIFY:
+        $transaction->setNewValue(ManiphestTaskStatus::STATUS_VERIFY);
+        break;
+      case ManiphestTransactionType::TYPE_ANALYZE:
+        $transaction->setNewValue(ManiphestTaskStatus::STATUS_ANALYZE);
+        break;
       case ManiphestTransactionType::TYPE_CCS:
         // Accumulate the new explicit CCs into the array that we'll add in
         // the CC transaction later.
