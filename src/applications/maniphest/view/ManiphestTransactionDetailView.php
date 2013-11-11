@@ -470,8 +470,8 @@ final class ManiphestTransactionDetailView extends ManiphestView {
             $desc = 'triaged this task as "'.$new_name.'" priority';
           } else if ($old > $new) {
             $verb = 'Lowered Priority';
-            $desc = 'lowered the priority of this task from "'.$old_name.'" to '.
-                    '"'.$new_name.'"';
+            $desc = 'lowered the priority of this task from "'.$old_name.'" '.
+                    'to "'.$new_name.'"';
           } else {
             $verb = 'Raised Priority';
             $desc = 'raised the priority of this task from "'.$old_name.'" to '.
