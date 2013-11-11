@@ -464,20 +464,22 @@ final class ManiphestTransactionDetailView extends ManiphestView {
         $old_name = ManiphestTaskPriority::getTaskPriorityName($old);
         $new_name = ManiphestTaskPriority::getTaskPriorityName($new);
 
-        if ($old == ManiphestTaskPriority::PRIORITY_TRIAGE) {
-          $verb = 'Triaged';
-          $desc = 'triaged this task as "'.$new_name.'" priority';
-        } else if ($old > $new) {
-          $verb = 'Lowered Priority';
-          $desc = 'lowered the priority of this task from "'.$old_name.'" to '.
-                  '"'.$new_name.'"';
-        } else {
-          $verb = 'Raised Priority';
-          $desc = 'raised the priority of this task from "'.$old_name.'" to '.
-                  '"'.$new_name.'"';
-        }
-        if ($new == ManiphestTaskPriority::PRIORITY_UNBREAK_NOW) {
-          $classes[] = 'unbreaknow';
+        if ($new !== ManiphestTaskPriority::PRIORITY_TRIAGE) {
+          if ($old == ManiphestTaskPriority::PRIORITY_TRIAGE) {
+            $verb = 'Triaged';
+            $desc = 'triaged this task as "'.$new_name.'" priority';
+          } else if ($old > $new) {
+            $verb = 'Lowered Priority';
+            $desc = 'lowered the priority of this task from "'.$old_name.'" to '.
+                    '"'.$new_name.'"';
+          } else {
+            $verb = 'Raised Priority';
+            $desc = 'raised the priority of this task from "'.$old_name.'" to '.
+                    '"'.$new_name.'"';
+          }
+          if ($new == ManiphestTaskPriority::PRIORITY_UNBREAK_NOW) {
+            $classes[] = 'unbreaknow';
+          }
         }
         break;
       case ManiphestTransactionType::TYPE_ATTACH:

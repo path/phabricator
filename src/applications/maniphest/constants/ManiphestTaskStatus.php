@@ -30,7 +30,7 @@ final class ManiphestTaskStatus extends ManiphestConstants {
 
   public static function getTaskStatusMap() {
     return array(
-      self::STATUS_OPEN                 => 'Open',
+      self::STATUS_OPEN                 => 'Screen',
       self::STATUS_BUILD                => 'Build',
       self::STATUS_VERIFY               => 'Verify',
       self::STATUS_ANALYZE              => 'Analyze',
@@ -44,7 +44,7 @@ final class ManiphestTaskStatus extends ManiphestConstants {
 
   public static function getTaskStatusFullName($status) {
     $map = array(
-      self::STATUS_OPEN                 => 'Open',
+      self::STATUS_OPEN                 => 'Screen',
       self::STATUS_BUILD                => 'Build',
       self::STATUS_VERIFY               => 'Verify',
       self::STATUS_ANALYZE              => 'Analyze',

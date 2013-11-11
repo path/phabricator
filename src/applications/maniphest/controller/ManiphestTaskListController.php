@@ -961,7 +961,7 @@ final class ManiphestTaskListController extends ManiphestController {
 
   private function getStatusButtonMap() {
     return array(
-      'o'   => pht('Open'),
+      'o'   => pht('Screen'),
       'b'   => pht('Build'),
       'v'   => pht('Verify'),
       'a'   => pht('Analyze'),

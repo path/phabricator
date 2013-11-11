@@ -27,7 +27,6 @@ final class ManiphestTaskEditController extends ManiphestController {
       }
     } else {
       $task = new ManiphestTask();
-      $task->setPriority(ManiphestTaskPriority::getDefaultPriority());
       $task->setAuthorPHID($user->getPHID());
 
       // These allow task creation with defaults.
@@ -81,6 +80,7 @@ final class ManiphestTaskEditController extends ManiphestController {
       $new_title = $request->getStr('title');
       $new_desc = $request->getStr('description');
       $new_status = $request->getStr('status');
+      $new_priority = $request->getStr('priority');
 
       $workflow = '';
 
@@ -99,6 +99,8 @@ final class ManiphestTaskEditController extends ManiphestController {
         $task->setDescription($new_desc);
         $changes[ManiphestTransactionType::TYPE_STATUS] =
           ManiphestTaskStatus::STATUS_OPEN;
+        $changes[ManiphestTransactionType::TYPE_PRIORITY] =
+          ManiphestTaskPriority::PRIORITY_TRIAGE;
 
         $workflow = 'create';
       }
@@ -399,7 +401,13 @@ final class ManiphestTaskEditController extends ManiphestController {
             ->setLabel(pht('Status'))
             ->setName('status')
             ->setValue($task->getStatus())
-            ->setOptions(ManiphestTaskStatus::getTaskStatusMap()));
+            ->setOptions(ManiphestTaskStatus::getTaskStatusMap()))
+        ->appendChild(
+          id(new AphrontFormSelectControl())
+            ->setLabel(pht('Priority'))
+            ->setName('priority')
+            ->setOptions($priority_map)
+            ->setValue($task->getPriority()));
     }
 
     $form
@@ -418,12 +426,6 @@ final class ManiphestTaskEditController extends ManiphestController {
           ->setValue($cc_value)
           ->setUser($user)
           ->setDatasource('/typeahead/common/mailable/'))
-      ->appendChild(
-        id(new AphrontFormSelectControl())
-          ->setLabel(pht('Priority'))
-          ->setName('priority')
-          ->setOptions($priority_map)
-          ->setValue($task->getPriority()))
       ->appendChild(
         id(new AphrontFormTokenizerControl())
           ->setLabel(pht('Projects'))
