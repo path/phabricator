@@ -115,10 +115,6 @@ final class ManiphestTransactionDetailView extends ManiphestView {
 
     $descs = implode("\n", $descs);
 
-    if ($comments) {
-      $descs .= "\n".$comments;
-    }
-
     foreach ($this->transactions as $transaction) {
       $supplemental = $this->renderSupplementalInfoForEmail($transaction);
       if ($supplemental) {
@@ -127,7 +123,7 @@ final class ManiphestTransactionDetailView extends ManiphestView {
     }
 
     $this->forEmail = false;
-    return array($action, $descs);
+    return array($action, $descs, $comments ?: '');
   }
 
   public function render() {

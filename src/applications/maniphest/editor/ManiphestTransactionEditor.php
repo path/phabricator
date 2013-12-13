@@ -252,7 +252,7 @@ final class ManiphestTransactionEditor extends PhabricatorEditor {
     $view->setTransactionGroup($transactions);
     $view->setHandles($handles);
     $view->setAuxiliaryFields($this->auxiliaryFields);
-    list($action, $main_body) = $view->renderForEmail($with_date = false);
+    list($action, $main_body, $comments) = $view->renderForEmail($with_date = false);
 
     $is_create = $this->isCreate($transactions);
 
@@ -262,6 +262,7 @@ final class ManiphestTransactionEditor extends PhabricatorEditor {
 
     $body = new PhabricatorMetaMTAMailBody();
     $body->addRawSection($main_body);
+    $body->addRawSection($comments);
     if ($is_create) {
       $body->addTextSection(pht('TASK DESCRIPTION'), $task->getDescription());
     }
