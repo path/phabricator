@@ -443,7 +443,7 @@ final class ManiphestTaskDetailController extends ManiphestController {
 
   private function buildHeaderView(ManiphestTask $task) {
     $view = id(new PHUIHeaderView())
-      ->setHeader($task->getTitle())
+      ->setHeader('T' . $task->getID() . ' ' . $task->getTitle())
       ->setUser($this->getRequest()->getUser())
       ->setPolicyObject($task);
 
