@@ -151,7 +151,7 @@ final class ManiphestTaskDetailController extends ManiphestController {
 
     $transaction_types = array(
       PhabricatorTransactions::TYPE_COMMENT => pht('Comment'),
-      ManiphestTransaction::TYPE_STATUS     => pht('Close Task'),
+      ManiphestTransaction::TYPE_STATUS     => pht('Change Status'),
       ManiphestTransaction::TYPE_OWNER      => pht('Reassign / Claim'),
       ManiphestTransaction::TYPE_CCS        => pht('Add CCs'),
       ManiphestTransaction::TYPE_PRIORITY   => pht('Change Priority'),
@@ -180,23 +180,59 @@ final class ManiphestTaskDetailController extends ManiphestController {
       }
     }
 
-    if ($task->getStatus() == ManiphestTaskStatus::STATUS_OPEN) {
-      $resolution_types = array_select_keys(
-        $resolution_types,
-        array(
-          ManiphestTaskStatus::STATUS_CLOSED_RESOLVED,
-          ManiphestTaskStatus::STATUS_CLOSED_WONTFIX,
-          ManiphestTaskStatus::STATUS_CLOSED_INVALID,
-          ManiphestTaskStatus::STATUS_CLOSED_SPITE,
-        ));
-    } else {
-      $resolution_types = array(
-        ManiphestTaskStatus::STATUS_OPEN => 'Reopened',
-      );
-      $transaction_types[ManiphestTransaction::TYPE_STATUS] =
-        'Reopen Task';
-      unset($transaction_types[ManiphestTransaction::TYPE_PRIORITY]);
-      unset($transaction_types[ManiphestTransaction::TYPE_OWNER]);
+    switch($task->getStatus()) {
+      case ManiphestTaskStatus::STATUS_OPEN:
+        $resolution_types = array_select_keys(
+          $resolution_types,
+          array(
+            ManiphestTaskStatus::STATUS_BUILD,
+            ManiphestTaskStatus::STATUS_VERIFY,
+            ManiphestTaskStatus::STATUS_CLOSED_RESOLVED,
+            ManiphestTaskStatus::STATUS_CLOSED_WONTFIX,
+            ManiphestTaskStatus::STATUS_CLOSED_INVALID,
+            ManiphestTaskStatus::STATUS_CLOSED_SPITE,
+          ));
+        break;
+      case ManiphestTaskStatus::STATUS_BUILD:
+        $resolution_types = array_select_keys(
+          $resolution_types,
+          array(
+            ManiphestTaskStatus::STATUS_OPEN,
+            ManiphestTaskStatus::STATUS_VERIFY,
+            ManiphestTaskStatus::STATUS_CLOSED_RESOLVED,
+            ManiphestTaskStatus::STATUS_CLOSED_WONTFIX,
+            ManiphestTaskStatus::STATUS_CLOSED_INVALID,
+            ManiphestTaskStatus::STATUS_CLOSED_SPITE,
+          ));
+        break;
+      case ManiphestTaskStatus::STATUS_VERIFY:
+        $resolution_types = array_select_keys(
+          $resolution_types,
+          array(
+            ManiphestTaskStatus::STATUS_OPEN,
+            ManiphestTaskStatus::STATUS_BUILD,
+            ManiphestTaskStatus::STATUS_CLOSED_RESOLVED,
+            ManiphestTaskStatus::STATUS_CLOSED_WONTFIX,
+            ManiphestTaskStatus::STATUS_CLOSED_INVALID,
+            ManiphestTaskStatus::STATUS_CLOSED_SPITE,
+          ));
+        break;
+      case ManiphestTaskStatus::STATUS_CLOSED_RESOLVED:
+      case ManiphestTaskStatus::STATUS_CLOSED_WONTFIX:
+      case ManiphestTaskStatus::STATUS_CLOSED_INVALID:
+      case ManiphestTaskStatus::STATUS_CLOSED_SPITE:
+        $resolution_types = array(
+          ManiphestTaskStatus::STATUS_OPEN => 'Open',
+          ManiphestTaskStatus::STATUS_BUILD => 'Build',
+          ManiphestTaskStatus::STATUS_VERIFY => 'Verify',
+        );
+        $transaction_types[ManiphestTransaction::TYPE_STATUS] =
+          'Reopen Task';
+        unset($transaction_types[ManiphestTransaction::TYPE_PRIORITY]);
+        unset($transaction_types[ManiphestTransaction::TYPE_OWNER]);
+        break;
+      default:
+        throw new Exception('unknown status');
     }
 
     $default_claim = array(

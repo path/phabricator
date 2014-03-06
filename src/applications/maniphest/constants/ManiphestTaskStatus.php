@@ -11,12 +11,18 @@ final class ManiphestTaskStatus extends ManiphestConstants {
   const STATUS_CLOSED_INVALID     = 3;
   const STATUS_CLOSED_DUPLICATE   = 4;
   const STATUS_CLOSED_SPITE       = 5;
+  const STATUS_BUILD              = 50;
+  const STATUS_VERIFY             = 51;
 
   const COLOR_STATUS_OPEN = 'status';
+  const COLOR_STATUS_BUILD = 'status';
+  const COLOR_STATUS_VERIFY = 'status';
   const COLOR_STATUS_CLOSED = 'status-dark';
 
   public static function getTaskStatusMap() {
     $open = pht('Open');
+    $build = pht('Build');
+    $verify = pht('Verify');
     $resolved = pht('Resolved');
     $wontfix = pht('Wontfix');
     $invalid = pht('Invalid');
@@ -25,6 +31,8 @@ final class ManiphestTaskStatus extends ManiphestConstants {
 
     return array(
       self::STATUS_OPEN                 => $open,
+      self::STATUS_BUILD                => $build,
+      self::STATUS_VERIFY               => $verify,
       self::STATUS_CLOSED_RESOLVED      => $resolved,
       self::STATUS_CLOSED_WONTFIX       => $wontfix,
       self::STATUS_CLOSED_INVALID       => $invalid,
@@ -35,6 +43,8 @@ final class ManiphestTaskStatus extends ManiphestConstants {
 
   public static function getTaskStatusFullName($status) {
     $open = pht('Open');
+    $build = pht('Build');
+    $verify = pht('Verify');
     $resolved = pht('Closed, Resolved');
     $wontfix = pht('Closed, Wontfix');
     $invalid = pht('Closed, Invalid');
@@ -43,6 +53,8 @@ final class ManiphestTaskStatus extends ManiphestConstants {
 
     $map = array(
       self::STATUS_OPEN                 => $open,
+      self::STATUS_BUILD                => $build,
+      self::STATUS_VERIFY               => $verify,
       self::STATUS_CLOSED_RESOLVED      => $resolved,
       self::STATUS_CLOSED_WONTFIX       => $wontfix,
       self::STATUS_CLOSED_INVALID       => $invalid,
@@ -57,6 +69,8 @@ final class ManiphestTaskStatus extends ManiphestConstants {
 
     $map = array(
       self::STATUS_OPEN             => self::COLOR_STATUS_OPEN,
+      self::STATUS_BUILD            => self::COLOR_STATUS_BUILD,
+      self::STATUS_VERIFY           => self::COLOR_STATUS_VERIFY,
       self::STATUS_CLOSED_RESOLVED  => self::COLOR_STATUS_CLOSED,
       self::STATUS_CLOSED_WONTFIX   => self::COLOR_STATUS_CLOSED,
       self::STATUS_CLOSED_INVALID   => self::COLOR_STATUS_CLOSED,
@@ -70,6 +84,8 @@ final class ManiphestTaskStatus extends ManiphestConstants {
     $default = 'oh-open';
     $map = array(
       self::STATUS_OPEN             => 'oh-open',
+      self::STATUS_BUILD            => 'oh-open',
+      self::STATUS_VERIFY           => 'oh-open',
       self::STATUS_CLOSED_RESOLVED  => 'oh-closed-dark',
       self::STATUS_CLOSED_WONTFIX   => 'oh-closed-dark',
       self::STATUS_CLOSED_INVALID   => 'oh-closed-dark',
@@ -106,6 +122,8 @@ final class ManiphestTaskStatus extends ManiphestConstants {
   public static function getOpenStatusConstants() {
     return array(
       self::STATUS_OPEN,
+      self::STATUS_BUILD,
+      self::STATUS_VERIFY,
     );
   }
 
@@ -138,6 +156,12 @@ final class ManiphestTaskStatus extends ManiphestConstants {
       'close'         => self::STATUS_CLOSED_RESOLVED,
       'closes'        => self::STATUS_CLOSED_RESOLVED,
       'closed'        => self::STATUS_CLOSED_RESOLVED,
+      'build'         => self::STATUS_BUILD,
+      'builds'        => self::STATUS_BUILD,
+      'built'         => self::STATUS_BUILD,
+      'verify'        => self::STATUS_VERIFY,
+      'verifies'      => self::STATUS_VERIFY,
+      'verified'      => self::STATUS_VERIFY,
       'ref'           => null,
       'refs'          => null,
       'references'    => null,
@@ -153,6 +177,8 @@ final class ManiphestTaskStatus extends ManiphestConstants {
       'as spite'      => self::STATUS_CLOSED_SPITE,
       'out of spite'  => self::STATUS_CLOSED_SPITE,
       'as invalid'    => self::STATUS_CLOSED_INVALID,
+      'in build'      => self::STATUS_BUILD,
+      'to verify'     => self::STATUS_VERIFY,
     );
   }
 

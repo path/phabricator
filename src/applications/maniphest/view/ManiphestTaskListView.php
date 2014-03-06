@@ -58,7 +58,7 @@ final class ManiphestTaskListView extends ManiphestView {
       }
 
       $status = $task->getStatus();
-      if ($status != ManiphestTaskStatus::STATUS_OPEN) {
+      if (!ManiphestTaskStatus::isOpenStatus($status)) {
         $item->setDisabled(true);
       }
 

@@ -143,7 +143,7 @@ final class ManiphestTransaction
         }
 
       case self::TYPE_STATUS:
-        if ($new == ManiphestTaskStatus::STATUS_OPEN) {
+        if (ManiphestTaskStatus::isOpenStatus($new)) {
           return 'green';
         } else {
           return 'black';
@@ -179,6 +179,10 @@ final class ManiphestTransaction
             } else {
               return pht('Reopened');
             }
+          case ManiphestTaskStatus::STATUS_BUILD:
+            return pht('Built');
+          case ManiphestTaskStatus::STATUS_VERIFY:
+            return pht('Verified');
           case ManiphestTaskStatus::STATUS_CLOSED_SPITE:
             return pht('Spited');
           case ManiphestTaskStatus::STATUS_CLOSED_DUPLICATE:
@@ -243,6 +247,10 @@ final class ManiphestTransaction
 
       case self::TYPE_STATUS:
         switch ($new) {
+          case ManiphestTaskStatus::STATUS_VERIFY:
+            return 'verify';
+          case ManiphestTaskStatus::STATUS_BUILD:
+            return 'build';
           case ManiphestTaskStatus::STATUS_OPEN:
             return 'create';
           case ManiphestTaskStatus::STATUS_CLOSED_SPITE:
@@ -314,7 +322,14 @@ final class ManiphestTransaction
                 '%s reopened this task.',
                 $this->renderHandleLink($author_phid));
             }
-
+          case ManiphestTaskStatus::STATUS_BUILD:
+            return pht(
+                '%s pleads for testing.',
+                $this->renderHandleLink($author_phid));
+          case ManiphestTaskStatus::STATUS_VERIFY:
+            return pht(
+                '%s requests for task to be verified.',
+                $this->renderHandleLink($author_phid));
           case ManiphestTaskStatus::STATUS_CLOSED_SPITE:
             return pht(
               '%s closed this task out of spite.',
@@ -329,7 +344,7 @@ final class ManiphestTransaction
               $new,
               '???');
             return pht(
-              '%s closed this task as "%s".',
+              '%s modified this task to "%s".',
               $this->renderHandleLink($author_phid),
               $status_name);
         }
@@ -505,7 +520,16 @@ final class ManiphestTransaction
                 $this->renderHandleLink($author_phid),
                 $this->renderHandleLink($object_phid));
             }
-
+          case ManiphestTaskStatus::STATUS_BUILD:
+            return pht(
+                '%s pleads for %s to be tested.',
+                $this->renderHandleLink($author_phid),
+                $this->renderHandleLink($object_phid));
+          case ManiphestTaskStatus::STATUS_VERIFY:
+            return pht(
+                '%s requests %s to be verified.',
+                $this->renderHandleLink($author_phid),
+                $this->renderHandleLink($object_phid));
           case ManiphestTaskStatus::STATUS_CLOSED_SPITE:
             return pht(
               '%s closed %s out of spite.',

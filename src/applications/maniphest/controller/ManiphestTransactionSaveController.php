@@ -161,8 +161,7 @@ final class ManiphestTransactionSaveController extends ManiphestController {
         break;
       case ManiphestTransaction::TYPE_STATUS:
         if (!$task->getOwnerPHID() &&
-            $request->getStr('resolution') !=
-            ManiphestTaskStatus::STATUS_OPEN) {
+            !ManiphestTaskStatus::isOpenStatus($request->getStr('resolution'))) {
           // Closing an unassigned task. Assign the user as the owner of
           // this task.
           $assign = new ManiphestTransaction();
